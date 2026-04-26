@@ -152,14 +152,23 @@ export default function PenyelenggaraProfilePage() {
 
       const res = await fetch(buildApiUrl('/api/user/profile'), {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          'Accept': 'application/json'
+        },
         body: formData,
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Gagal menyimpan profil');
 
       setAuth(token, data.data);
-      setProfileData(prev => ({ ...prev, avatarUrl: data.data.avatarUrl }));
+      setProfileData(prev => ({ 
+        ...prev, 
+        name: data.data.nama_lengkap,
+        username: data.data.username,
+        phone: data.data.no_hp,
+        avatarUrl: data.data.avatarUrl 
+      }));
       setAvatarFile(null);
       setEdited(false); toast();
     } catch (err) {

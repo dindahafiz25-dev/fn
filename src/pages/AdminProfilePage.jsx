@@ -142,14 +142,23 @@ export default function AdminProfilePage() {
 
       const res = await fetch(buildApiUrl('/api/user/profile'), {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          'Accept': 'application/json'
+        },
         body: formData
       });
       const d = await res.json();
       if (!res.ok) throw new Error(d.message || 'Gagal');
 
       setAuth(token, d.data);
-      setProfileData(prev => ({ ...prev, avatarUrl: d.data.avatarUrl }));
+      setProfileData({
+        name: d.data.nama_lengkap,
+        email: d.data.email,
+        phone: d.data.no_hp,
+        avatarUrl: d.data.avatarUrl,
+        bio: profileData.bio // Bio isn't in backend yet, keep it
+      });
       setAvatarFile(null);
       setEdited(false);
       toast();

@@ -156,14 +156,23 @@ export default function UserProfilePage() {
 
       const res = await fetch(buildApiUrl('/api/user/profile'), { 
         method:'POST', 
-        headers:{ Authorization:`Bearer ${token}` }, 
+        headers:{ 
+          Authorization:`Bearer ${token}`,
+          'Accept': 'application/json'
+        }, 
         body: formData 
       });
       const d = await res.json();
       if (!res.ok) throw new Error(d.message||'Gagal');
       
       setAuth(token, d.data);
-      setProf(p => ({ ...p, avatarUrl: d.data.avatarUrl }));
+      setProf(p => ({ 
+        ...p, 
+        name: d.data.nama_lengkap,
+        username: d.data.username,
+        phone: d.data.no_hp,
+        avatarUrl: d.data.avatarUrl 
+      }));
       setAvatarFile(null);
       setEdited(false); 
       showToast('Profil berhasil diperbarui!');
