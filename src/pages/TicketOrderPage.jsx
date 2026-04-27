@@ -266,17 +266,22 @@ export default function TicketOrderPage() {
           : "Pembayaran berhasil dikirim, menunggu verifikasi admin."
       );
 
-      // Siapkan data tiket untuk modal
-      setTicketData({
-        qrValue: pendaftaranId ? `EVT-${pendaftaranId}` : `EVT-${id}-${Date.now()}`,
-        eventName: event?.title,
-        userName: authUser?.name || 'Guest',
-        date: event?.date,
-        location: event?.location,
-        ticketCount: form.jumlah_tiket
-      });
-      // Tampilkan popup tiket
-      setShowTicketModal(true);
+      if (isGratis) {
+        // Siapkan data tiket untuk modal
+        setTicketData({
+          qrValue: pendaftaranId ? `EVT-${pendaftaranId}` : `EVT-${id}-${Date.now()}`,
+          eventName: event?.title,
+          userName: authUser?.name || 'Guest',
+          date: event?.date,
+          location: event?.location,
+          ticketCount: form.jumlah_tiket
+        });
+        // Tampilkan popup tiket
+        setShowTicketModal(true);
+      } else {
+        // Untuk event berbayar, langsung arahkan ke halaman success
+        navigate(`/events/${id}/success`);
+      }
 
     } catch (err) {
       setError(err.message || "Terjadi kesalahan koneksi saat memesan tiket.");
