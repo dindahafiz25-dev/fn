@@ -242,21 +242,32 @@ export default function AdminEventsPage() {
   }, [events]);
 
   const monthlyChartData = useMemo(() => {
-    const map = {};
+    const map = {}; // YYYY-MM -> { count, label }
     events.forEach(e => {
       if (!e.tanggal) return;
       const d = new Date(e.tanggal);
       if (isNaN(d)) return;
-      const key = d.toLocaleDateString("id-ID", { month: "short", year: "2-digit" });
-      map[key] = (map[key] || 0) + 1;
+      
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const sortKey = `${yyyy}-${mm}`;
+      
+      if (!map[sortKey]) {
+        map[sortKey] = {
+          count: 0,
+          label: d.toLocaleDateString("id-ID", { month: "short", year: "2-digit" })
+        };
+      }
+      map[sortKey].count += 1;
     });
-    const sorted = Object.entries(map)
-      .sort((a, b) => {
-        const parse = s => { const [m, y] = s.split(" "); return new Date(`${m} 20${y}`); };
-        return parse(a[0]) - parse(b[0]);
-      })
-      .slice(-12);
-    return sorted.map(([name, total]) => ({ name, total }));
+    
+    // Sort keys alphabetically (YYYY-MM naturally sorts chronologically)
+    const sortedKeys = Object.keys(map).sort().slice(-12);
+    
+    return sortedKeys.map(key => ({ 
+      name: map[key].label, 
+      total: map[key].count 
+    }));
   }, [events]);
 
   // Stats

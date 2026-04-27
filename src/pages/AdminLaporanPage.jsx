@@ -12,7 +12,7 @@ const BULAN = ['Semua Bulan', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'J
 
 export default function AdminLaporanPage() {
   const [tab, setTab] = useState('event'); // 'event' | 'penyelenggara'
-  const [filterTahun, setFilterTahun] = useState('semua');
+  const [filterTahun, setFilterTahun] = useState('2026');
   const [filterBulan, setFilterBulan] = useState('0'); // 0 = Semua
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);

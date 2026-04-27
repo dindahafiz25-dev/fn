@@ -110,16 +110,29 @@ export default function PenyelenggaraRiwayatPage() {
 
   /* ─── Chart: Area trend bulan ────────────────────────── */
   const areaChartData = useMemo(() => {
-    const monthly = {};
+    const monthly = {}; // YYYY-MM -> { bulan, event, peserta }
     allEvents.forEach(e => {
       const d = new Date(e.tanggal);
       if (isNaN(d)) return;
-      const key = d.toLocaleDateString('id-ID', { month: 'short', year: '2-digit' });
-      if (!monthly[key]) monthly[key] = { bulan: key, event: 0, peserta: 0 };
-      monthly[key].event   += 1;
-      monthly[key].peserta += e.totalPeserta;
+      
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const sortKey = `${yyyy}-${mm}`;
+      
+      if (!monthly[sortKey]) {
+        monthly[sortKey] = { 
+          bulan: d.toLocaleDateString('id-ID', { month: 'short', year: '2-digit' }), 
+          event: 0, 
+          peserta: 0 
+        };
+      }
+      monthly[sortKey].event += 1;
+      monthly[sortKey].peserta += e.totalPeserta;
     });
-    return Object.values(monthly).slice(-7);
+    
+    // Sort keys chronologically
+    const sortedKeys = Object.keys(monthly).sort().slice(-7);
+    return sortedKeys.map(key => monthly[key]);
   }, [allEvents]);
 
   /* ─── Chart: Pie kategori ────────────────────────────── */
