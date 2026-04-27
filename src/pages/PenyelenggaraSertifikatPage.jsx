@@ -135,7 +135,7 @@ export default function PenyelenggaraSertifikatPage() {
     if (ev.sertifikat_config) {
         setConfig(ev.sertifikat_config);
     } else {
-        setConfig({ x: '50%', y: '50%', fontSize: '30px', color: '#000000', align: 'center' });
+        setConfig({ x: '0%', y: '50%', fontSize: '30px', color: '#000000', align: 'center' });
     }
     setFileTemplate(null);
     setIsSettingModalOpen(true);
@@ -367,7 +367,7 @@ export default function PenyelenggaraSertifikatPage() {
                                 position: 'absolute',
                                 left: config.x,
                                 top: config.y,
-                                transform: 'translate(-50%, -50%)',
+                                width: '100%',
                                 color: config.color,
                                 fontSize: config.fontSize,
                                 textAlign: config.align,
