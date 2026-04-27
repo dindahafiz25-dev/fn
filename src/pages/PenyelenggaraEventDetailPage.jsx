@@ -31,15 +31,30 @@ function formatCurrency(val) {
 /* ─── CSV Export ───────────────────────────────────────────── */
 function exportCSV(event, participants) {
   const rows = [
-    ["Nama Peserta", "Email", "Jumlah Tiket", "Status", "Tanggal Daftar"]
+    ["Nama Peserta", "Email", "Jumlah Tiket", "Status", "Tanggal Daftar", "Jawaban Form"]
   ];
   participants.forEach(p => {
+    let responses = {};
+    try {
+      responses = typeof p.custom_form_responses === "string"
+        ? JSON.parse(p.custom_form_responses || "{}")
+        : (p.custom_form_responses || {});
+    } catch (e) {}
+    
+    let customFormStr = "";
+    if (Object.keys(responses).length > 0) {
+      customFormStr = Object.entries(responses)
+        .map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(', ') : v}`)
+        .join(' | ');
+    }
+
     rows.push([
       p.nama_peserta || "-",
       p.email_peserta || "-",
       p.jumlah_tiket || 1,
       p.status_pendaftaran || "-",
-      p.tanggal_daftar ? new Date(p.tanggal_daftar).toLocaleDateString("id-ID") : "-"
+      p.tanggal_daftar ? new Date(p.tanggal_daftar).toLocaleDateString("id-ID") : "-",
+      customFormStr || "-"
     ]);
   });
   const csvContent = rows.map(r =>
