@@ -6,6 +6,8 @@ export const defaultHeaders = {
 };
 
 export function buildApiUrl(path) {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   return `${API_BASE_URL}${normalizedPath}`;
 }
