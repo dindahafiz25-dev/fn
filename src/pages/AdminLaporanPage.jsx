@@ -45,7 +45,7 @@ export default function AdminLaporanPage() {
       const monthMatch = filterBulan === '0' || (date.getMonth() + 1).toString() === filterBulan;
       return yearMatch && monthMatch;
     });
-  }, [filterTahun, filterBulan]);
+  }, [filterTahun, filterBulan, reports]);
 
   // Aggregate Data untuk Penyelenggara
   const organizerReports = useMemo(() => {
